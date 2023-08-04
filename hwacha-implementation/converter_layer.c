@@ -7,19 +7,6 @@
 extern void fp32_to_uint8(float *in, int *out, unsigned count);
 extern void int8_to_fp32(int *in, float *out, unsigned count);
 
-
-unsigned int roundup_and_align(unsigned int val, unsigned int round_to)
-{
-    unsigned int rounded;
-
-    if (val % round_to != 0) {
-        rounded = val + round_to - (val % round_to);
-    } else {
-        rounded = val;
-    }
-
-    return rounded;
-}
 /**
  * Convert a 3D array with the NCHW (number of samples, channels, height, width)
  * data layout to (samples, height, width, channels)
@@ -28,7 +15,6 @@ unsigned int roundup_and_align(unsigned int val, unsigned int round_to)
 */
 void convert_nchw_to_nhwc(int *in, int w, int h, int c, int *out)
 {
-    #pragma omp parallel for collapse(2)
     // over each channel (0 - (c-1))
     for (int i = 0; i < c; i++) {
         // over the height (0 - (h-1))
@@ -52,8 +38,6 @@ void convert_fd_to_nchw(float *in, int w, int h, int c, float *out)
     unsigned int line_stride = w * 32; 
     // number of elements in a single surface (32 channels) of the FD input 
     unsigned int surface_stride = line_stride * h;
-
-    #pragma omp parallel for collapse(2)
     // over each channel (0 - c1)
     for (int i = 0; i < c; i++) {
         // over the height (0 - (h-1))

@@ -3,9 +3,7 @@
 
 
 
-static double int_to_fp_elmt(
-    int in_element
-)
+static double int_to_fp_elmt(int in_element)
 {
     // ignored post_scale and offset, because post_scale always 1 and offset always 0;
     
@@ -43,11 +41,7 @@ static double int_to_fp_elmt(
  * Converts from in_element double to int in specified range
  * [min_value, max_value]
  **/
-static long long int fp_to_int_elmt(
-    double in_element,
-    long long int min_value,
-    long long int max_value
-)
+static long long int fp_to_int_elmt(double in_element, long long int min_value, long long int max_value)
 {
     double scale = 0.16518650949001312;
     double shifter = pow(2.0, 0);
