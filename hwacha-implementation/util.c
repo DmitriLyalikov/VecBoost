@@ -450,10 +450,8 @@ void convert_fd_to_nchw(float* in, int w, int h, int c, float *out)
     unsigned int line_stride = w * 32; 
     // number of elements in a single surface (32 channels) of the FD input 
     unsigned int surface_stride = line_stride * h;
-    // over each channel (0 - c1)
     for (int i = 0; i < c; i++) {
 	    int surface_index = i / 32;
-        // over the height (0 - (h-1))
         for (int j = 0; j < h; j++) {
             unsigned int out_offset =(w*h*i + w * j);
             unsigned int in_offset = (surface_stride * surface_index + line_stride * j + i);
@@ -468,6 +466,37 @@ void convert_fd_to_nchw(float* in, int w, int h, int c, float *out)
                 asm volatile ("vmca va2, %0"
                                 :
                                 : "r" (32 * 4)); // stride of 128 bytes
+                asm volatile ("la t0, vcvt_fd_to_nchw"
+                                :
+                                :
+                                : "t0");
+                asm volatile ("lw t1, 0(t0)");	
+                asm volatile ("vf 0(t0)");
+                i += consumed;
+            }
+        }
+    }
+    asm volatile ("fence");
+}
+
+void convert_nchw_to_nhwc(int* in, int w, int h, int c, int* out)
+{
+    setvcfg(0, 1, 0, 1);
+    for (int i = 0; i < c; i++) {
+        for (int j = 0; j < h; j++) {
+            unsigned int in_offset = w * h * i + w * j;
+            unsigned int out_offset = j * w * c + i;
+            for (int k = 0; k < w;) {
+                int consumed =  setvlen(w - i);
+                asm volatile ("vmca va0, %0"
+                                :
+                                : "r" (&in[in_offset + k]));
+                asm volatile ("vmca va1, %0"
+                                :
+                                : "r" (&out[out_offset + c * k]));
+                asm volatile ("vmca va2, %0"
+                                :
+                                : "r" (c * 4)); // stride of 128 bytes
                 asm volatile ("la t0, vcvt_fd_to_nchw"
                                 :
                                 :

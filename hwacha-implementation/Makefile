@@ -4,34 +4,46 @@ AS := riscv64-unknown-elf-as
 LD := riscv64-unknown-elf-ld
 
 # Compiler and linker flags
-CFLAGS := -march=rv32i -mabi=ilp32 -O2 -ffreestanding -nostdlib
-ASFLAGS := -march=rv32i
+CFLAGS := -march=rv64imafdvxhwacha -mabi=lp64d -mcmodel=medlow -std=gnu99
+ASFLAGS := -march=rv64imafdvxhwacha
 LDFLAGS := -T link.ld
 
 # Source files
-ASM_SRCS := my_asm_functions.S
-C_SRCS := main.c
+ASM_SRCS := utils.S
+C_SRCS := main.c converter.c converter_layer.c util.c 
 
 # Object files
 ASM_OBJS := $(ASM_SRCS:.S=.o)
 C_OBJS := $(C_SRCS:.c=.o)
-OBJS := $(ASM_OBJS) $(C_OBJS)
+# Object files
+OBJ := $(SRC:.c=.riscv) $(AS_SOURCES:.S=.o)
+
 
 # Executable name
-TARGET := my_program
+TARGET := hwacha_conversion
 
-.PHONY: all clean
+# Rule to compile .c files to .o files
+%.riscv: %.c
+        $(CC) $(CFLAGS) -c $< -o $@
 
-all: $(TARGET)
 
-$(TARGET): $(OBJS)
-	$(LD) $(LDFLAGS) -o $(TARGET) $(OBJS)
+# Rule to compile .c files to .s files (assembly)
+%.s: %.c
+        $(CC) $(CFLAGS) $< -o $@
 
-$(ASM_OBJS): $(ASM_SRCS)
-	$(AS) $(ASFLAGS) -o $@ $<
+# Rule to assemble .s files to .o files (object)
+%.o: %.s
+        $(CC) -c $< -o $@
 
-$(C_OBJS): $(C_SRCS)
-	$(CC) $(CFLAGS) -c -o $@ $<
+# Assemble assembly sources to object files
+%.o: %.S
+        $(AS) $(ASFLAGS) $< -o $@
 
+# Main rule to build the executable
+$(TARGET): $(OBJ)
+        $(CC) $(CFLAGS) $(OBJ) -o $(TARGET)
+
+# Clean rule to remove object files, assembly files, and the executable
 clean:
-	rm -f $(OBJS) $(TARGET)
+        rm -f $(OBJ) $(OBJ:.s=.o) $(TARGET)
+

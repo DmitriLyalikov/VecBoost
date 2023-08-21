@@ -1,5 +1,6 @@
 #include "converter.h"
 #include <math.h>
+#include <stdio.h>
 
 
 
@@ -35,7 +36,7 @@ static double int_to_fp_elmt(int in_element)
 
     return integerPart;
 }
-
+ 
 
 /**
  * Converts from in_element double to int in specified range
@@ -92,7 +93,5 @@ void int8_to_fp32(int *in, float *out, unsigned count)
 {
     unsigned i = 0;
 
-    for (i = 0; i < count; i++) {
-        out[i] = (float)int_to_fp_elmt(in[i]);
-    }
+    int8_to_fp32_hwacha(count, in, out);
 }
