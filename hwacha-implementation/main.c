@@ -36,14 +36,6 @@ void initializeintBuffer(int *buffer, size_t bufsize) {
 }
 
 
-
-
-
-
-
-
-
-
 int main(void)
 {
     int bufsize = 416 * 416 * 32;

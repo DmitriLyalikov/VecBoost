@@ -4,7 +4,7 @@ AS := riscv64-unknown-elf-as
 LD := riscv64-unknown-elf-ld
 
 # Compiler and linker flags
-CFLAGS := -march=rv64imafdvxhwacha -mabi=lp64d -mcmodel=medlow -std=gnu99
+CFLAGS := -march=rv64imafdvxhwacha -mabi=lp64d  -static -mcmodel=medlow -std=gnu99
 ASFLAGS := -march=rv64imafdvxhwacha
 LDFLAGS := -T link.ld
 
@@ -23,7 +23,7 @@ OBJ := $(C_SRCS:.c=.riscv) $(ASM_SRCS:.S=.o)
 TARGET := hwacha_conversion.riscv
 
 # Rule to compile .c files to .o files
-%.riscv: %.c
+%.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 
