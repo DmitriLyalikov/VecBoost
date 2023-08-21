@@ -3,10 +3,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <riscv-pk/encoding.h>
-
+#include "util.h"
 // These functions will be mapped to Hwacha 
-extern void fp32_to_uint8(float *in, int *out, unsigned count);
-extern void int8_to_fp32(int *in, float *out, unsigned count);
+//extern void fp32_to_uint8(float *in, int *out, unsigned count);
+//extern void int8_to_fp32(int *in, float *out, unsigned count);
 
 /**
  * Convert a 3D array with the NCHW (number of samples, channels, height, width)
@@ -14,6 +14,7 @@ extern void int8_to_fp32(int *in, float *out, unsigned count);
  * 
  * 
 */
+/* 
 void convert_nchw_to_nhwc(int *in, int w, int h, int c, int *out)
 {
     // over each channel (0 - (c-1))
@@ -27,12 +28,13 @@ void convert_nchw_to_nhwc(int *in, int w, int h, int c, int *out)
             }
         }
     }
-}
+} */
 /*
 *  Convert feature depth layout to NCHW (samples, channels, height, width)
 *  FD layout organizes data witha depth of 32 channels per element while the NCHW layout arranges
 *  data by samples
 */
+/* 
 void convert_fd_to_nchw(float *in, int w, int h, int c, float *out)
 {   
     // number of elements in a single row
@@ -53,9 +55,9 @@ void convert_fd_to_nchw(float *in, int w, int h, int c, float *out)
         }
     }
 }
+*/
 
-
-void forward_converter_layer(int conv_type, int *in_int8, float *in_fp32, int *out_int, float *o>
+void forward_converter_layer(int conv_type, int *in_int8, float *in_fp32, int *out_int, float *out_fp32)
 {
     /* Make a call to precision converter */
     // l.outputs * l.batch
