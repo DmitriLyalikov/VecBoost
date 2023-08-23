@@ -21,7 +21,7 @@
   (VRU_SWITCH))
 
 void hwacha_init() {
-  asm volatile ("lw t0, vsetvlen" : : : "t0");
+  asm volatile ("lw t0, vsetvl" : : : "t0");
   
 }
   
@@ -121,7 +121,7 @@ int setvlen(int vlen) {
     asm volatile ("vsetvl %0, %1"
                   : "=r" (consumed)
                   : "r" (vlen));
-    asm volatile ("la t0, vsetvlen" : : : "t0");
+    asm volatile ("la t0, vsetvl" : : : "t0");
     asm volatile ("vf 0(t0)");
     asm volatile ("fence");
     return consumed;

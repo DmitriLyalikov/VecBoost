@@ -36,7 +36,7 @@ vmemcpy_16:
     vstop
 
     .globl vemcpy_32 
-vemcpy_32:
+vmemcpy_32:
     vlw vv0, va0 
     vsw vv0, va1 
     vstop 
