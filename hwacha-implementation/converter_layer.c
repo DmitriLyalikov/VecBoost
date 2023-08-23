@@ -61,9 +61,9 @@ void forward_converter_layer(int conv_type, int *in_int8, float *in_fp32, int *o
 {
     /* Make a call to precision converter */
     // l.outputs * l.batch
-    unsigned count = 416 * 416 * 3;
+    unsigned count = 5 * 5 * 3;
     // l.out_w * l.out_h * roundup_and_align(l.out_c, 32);
-    unsigned int bufsize = 416 * 416 * 32;
+    unsigned int bufsize = 5 * 5 * 32;
 
     // CASE 1: Convert from FP32 to UINT8
     if (conv_type == 1) {
@@ -81,7 +81,7 @@ void forward_converter_layer(int conv_type, int *in_int8, float *in_fp32, int *o
         int8_to_fp32(in_int8, temp, count);
         end_conv = rdcycle();
         // Convert from feature depth layout to NCHW
-        convert_fd_to_nchw(temp, 416, 416, 3, out_fp32);
+        convert_fd_to_nchw(temp, 5, 5, 3, out_fp32);
         end_nchw = rdcycle();
         printf("Conversion Function cyles: %lu\n", end_conv - start_conv);
         printf("Feature depth to NCHW cyles: %lu\n", end_nchw - end_conv);

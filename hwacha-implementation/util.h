@@ -39,7 +39,7 @@ void square_32(int N, float* x, float* dest);
 void axpy_32(int N, float A, float* X, float* Y);
 
 void mul_32(int N, float* X, float* Y);
-void int8_fp_32_hwacha(int count, int* src, int* dest);
+void int8_fp_32_hwacha(int count, int* src, float* dest);
 void convert_nchw_to_nhwc(int* in, int w, int h, int c, int* out);
 void convert_fd_to_nchw(float* in, int w, int h, int c, float* out);
 

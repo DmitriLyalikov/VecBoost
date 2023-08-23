@@ -1,7 +1,7 @@
 #include "converter.h"
 #include <math.h>
 #include <stdio.h>
-
+#include "util.h"
 
 
 static double int_to_fp_elmt(int in_element)
@@ -93,5 +93,5 @@ void int8_to_fp32(int *in, float *out, unsigned count)
 {
     unsigned i = 0;
 
-    int8_to_fp32_hwacha(count, in, out);
+    int8_fp_32_hwacha(count, in, out);
 }

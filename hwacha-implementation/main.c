@@ -38,7 +38,7 @@ void initializeintBuffer(int *buffer, size_t bufsize) {
 
 int main(void)
 {
-    int bufsize = 416 * 416 * 32;
+    int bufsize = 5 * 5 * 32;
     printf("%d\n\r", bufsize);
     float *in_fp32 = calloc(1, sizeof(float));
     initializeBuffer(in_fp32, 1);

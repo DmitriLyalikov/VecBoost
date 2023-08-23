@@ -9,7 +9,7 @@ ASFLAGS := -march=rv64imafdvxhwacha
 LDFLAGS := -T link.ld
 
 # Source files
-ASM_SRCS := utils.S
+ASM_SRCS := util.S
 C_SRCS := main.c converter.c converter_layer.c util.c 
 
 # Object files
@@ -23,7 +23,7 @@ OBJ := $(C_SRCS:.c=.riscv) $(ASM_SRCS:.S=.o)
 TARGET := hwacha_conversion.riscv
 
 # Rule to compile .c files to .o files
-%.o: %.c
+%.riscv: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 
@@ -33,7 +33,7 @@ TARGET := hwacha_conversion.riscv
 
 # Rule to assemble .s files to .o files (object)
 %.o: %.s
-	$(CC) -c $< -o $@
+	$(AS) $(ASFLAGS) -c $< -o $@
 
 # Assemble assembly sources to object files
 %.o: %.S
