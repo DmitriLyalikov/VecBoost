@@ -9,7 +9,7 @@ ASFLAGS := -march=rv64imafdvxhwacha
 LDFLAGS := -T link.ld
 
 # Source files
-ASM_SRCS := util.S
+ASM_SRCS := util_asm.s
 C_SRCS := main.c converter.c converter_layer.c util.c 
 
 # Object files

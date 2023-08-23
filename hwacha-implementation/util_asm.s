@@ -1,29 +1,11 @@
     .align 4
     .section .text
 
-    .globl int8_to_fp32_hwacha
 # assume a0 contains n
 # assume a1 contains address of src
 # assume a2 contains address of dest
-    .globl int_to_fp32_hwacha
-int8_to_fp32_hwacha:
-    vsetcfg 1, 0   
-    addi t1, x0, 0
-    la t2, worker_thread
-    vmca va2, t1
-
-stripmine_loop:
-    vsetvl t0, a0
-    vmca va0, a1
-    vmca va1, a2
-    vf 0(t0)
-    add a1, a1, t0
-    add a2, a2, t0
-    sub a0, a0, t0
-    bnez a0, stripmine_loop
-    ret
-
-worker_thread:
+    .globl vint8_to_fp32
+vint8_to_fp32:
     vlw vv0, va0
     vfcvt.s.w vv0, vv0
     vsw vv0, va1
@@ -35,8 +17,8 @@ vmemcpy_16:
     vsh vv0, va1
     vstop
 
-    .globl vemcpy_32 
-vemcpy_32:
+    .globl vmemcpy_32 
+vmemcpy_32:
     vlw vv0, va0 
     vsw vv0, va1 
     vstop 

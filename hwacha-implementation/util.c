@@ -13,6 +13,8 @@
 #define VRU_SWITCH 0x0
 #endif
 
+extern void vcvt_fd_to_nchw(void);
+
 #define VCFG(nvvd, nvvw, nvvh, nvp) \
   (((nvvd) & 0x1ff) | \
   (((nvp) & 0x1f) << 9) | \
@@ -21,7 +23,7 @@
   (VRU_SWITCH))
 
 void hwacha_init() {
-  asm volatile ("lw t0, vsetvlen" : : : "t0");
+  asm volatile ("lw t0, vsetvl" : : : "t0");
   
 }
   
@@ -121,7 +123,7 @@ int setvlen(int vlen) {
     asm volatile ("vsetvl %0, %1"
                   : "=r" (consumed)
                   : "r" (vlen));
-    asm volatile ("la t0, vsetvlen" : : : "t0");
+    asm volatile ("la t0, vsetvl" : : : "t0");
     asm volatile ("vf 0(t0)");
     asm volatile ("fence");
     return consumed;
@@ -506,6 +508,27 @@ void convert_nchw_to_nhwc(int* in, int w, int h, int c, int* out)
                 i += consumed;
             }
         }
+    }
+    asm volatile ("fence");
+}
+
+void int8_fp_32_hwacha(int count, int* src, float* dest) {
+    setvcfg(0, 1, 0, 1);
+    for (int i = 0; i < count; i ++) {
+        int consumed =  setvlen(count - i);
+        asm volatile ("vmca va0, %0"
+                    :
+                    : "r" (&src[i]));    
+        asm volatile ("vmca va1, %0"
+                    :
+                    : "r" (&dest[i]));     
+        asm volatile ("la t0, vint8_to_fp32"
+                    :
+                    :
+                    : "t0");
+                asm volatile ("lw t1, 0(t0)");	
+                asm volatile ("vf 0(t0)");
+        i += consumed;
     }
     asm volatile ("fence");
 }
