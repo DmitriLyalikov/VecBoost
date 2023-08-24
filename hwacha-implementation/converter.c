@@ -89,9 +89,8 @@ void fp32_to_uint8(float *in, int *out, unsigned count)
 }
 
 // This is used in condition 2
-void int8_to_fp32(int *in, float *out, unsigned count)
+void int8_to_fp32(int *in, float *out, unsigned int count)
 {
-    unsigned i = 0;
 
     int8_fp_32_hwacha(count, in, out);
 }

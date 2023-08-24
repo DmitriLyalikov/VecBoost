@@ -51,6 +51,7 @@ int main(void)
     int fp_conv = 0;
     unsigned long start, end;
     start = rdcycle();
+    printf("Got to start of converter layer\n");
     forward_converter_layer(fp_conv, in_int, in_fp32, out_int, out_fp32);
     //printBufferContents(out_int, bufsize);
 

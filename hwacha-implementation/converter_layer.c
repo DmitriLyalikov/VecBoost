@@ -64,7 +64,7 @@ void forward_converter_layer(int conv_type, int *in_int8, float *in_fp32, int *o
     unsigned count = 5 * 5 * 3;
     // l.out_w * l.out_h * roundup_and_align(l.out_c, 32);
     unsigned int bufsize = 5 * 5 * 32;
-
+    printf("Allocated inside of conversion layer\n");
     // CASE 1: Convert from FP32 to UINT8
     if (conv_type == 1) {
         int *temp = calloc(bufsize, sizeof(int));
@@ -77,9 +77,12 @@ void forward_converter_layer(int conv_type, int *in_int8, float *in_fp32, int *o
         float *temp = calloc(bufsize, sizeof(float));
         unsigned long start_conv, end_conv, end_nchw;
         start_conv = rdcycle();
-
+	//printf("starting int8_fp_32 func\n");
         int8_to_fp32(in_int8, temp, count);
+	// printf("exit itofp32 func\n");
         end_conv = rdcycle();
+	printf("Conversion Function cyles: %lu\n", end_conv - start_conv);
+
         // Convert from feature depth layout to NCHW
         convert_fd_to_nchw(temp, 5, 5, 3, out_fp32);
         end_nchw = rdcycle();

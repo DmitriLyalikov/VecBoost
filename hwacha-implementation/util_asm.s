@@ -1,6 +1,10 @@
     .align 4
     .section .text
 
+        .globl vsetvlen
+vsetvlen:
+        vpset vp0
+        vstop
 # assume a0 contains n
 # assume a1 contains address of src
 # assume a2 contains address of dest
@@ -10,7 +14,6 @@ vint8_to_fp32:
     vfcvt.s.w vv0, vv0
     vsw vv0, va1
     vstop
-    
     .globl vmemcpy_16
 vmemcpy_16:
     vlh vv0, va0

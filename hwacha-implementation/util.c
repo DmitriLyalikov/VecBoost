@@ -23,7 +23,7 @@ extern void vcvt_fd_to_nchw(void);
   (VRU_SWITCH))
 
 void hwacha_init() {
-  asm volatile ("lw t0, vsetvl" : : : "t0");
+  asm volatile ("lw t0, vsetvlen" : : : "t0");
   
 }
   
@@ -123,7 +123,7 @@ int setvlen(int vlen) {
     asm volatile ("vsetvl %0, %1"
                   : "=r" (consumed)
                   : "r" (vlen));
-    asm volatile ("la t0, vsetvl" : : : "t0");
+    asm volatile ("la t0, vsetvlen" : : : "t0");
     asm volatile ("vf 0(t0)");
     asm volatile ("fence");
     return consumed;
@@ -514,8 +514,10 @@ void convert_nchw_to_nhwc(int* in, int w, int h, int c, int* out)
 
 void int8_fp_32_hwacha(int count, int* src, float* dest) {
     setvcfg(0, 1, 0, 1);
+    printf("we got to fp32 hwahcha\n");
     for (int i = 0; i < count; i ++) {
         int consumed =  setvlen(count - i);
+	printf("allocated vector length: %d\n");
         asm volatile ("vmca va0, %0"
                     :
                     : "r" (&src[i]));    
