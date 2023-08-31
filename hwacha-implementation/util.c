@@ -452,9 +452,9 @@ void convert_fd_to_nchw(float* in, int w, int h, int c, float *out)
     unsigned int line_stride = w * 32; 
     // number of elements in a single surface (32 channels) of the FD input 
     unsigned int surface_stride = line_stride * h;
-    for (int i = 0; i < c; i++) {
+    for (int i = 0; i < c; ) {
 	    int surface_index = i / 32;
-        for (int j = 0; j < h; j++) {
+        for (int j = 0; j < h;) {
             unsigned int out_offset =(w*h*i + w * j);
             unsigned int in_offset = (surface_stride * surface_index + line_stride * j + i);
             for (int k = 0; k < w;) {
@@ -485,7 +485,7 @@ void convert_nchw_to_nhwc(int* in, int w, int h, int c, int* out)
 {
     setvcfg(0, 1, 0, 1);
     for (int i = 0; i < c; i++) {
-        for (int j = 0; j < h; j++) {
+        for (int j = 0; j < h; ) {
             unsigned int in_offset = w * h * i + w * j;
             unsigned int out_offset = j * w * c + i;
             for (int k = 0; k < w;) {
@@ -514,10 +514,10 @@ void convert_nchw_to_nhwc(int* in, int w, int h, int c, int* out)
 
 void int8_fp_32_hwacha(int count, int* src, float* dest) {
     setvcfg(0, 1, 0, 1);
-    printf("we got to fp32 hwahcha\n");
-    for (int i = 0; i < count; i ++) {
+    // printf("we got to fp32 hwahcha\n");
+    for (int i = 0; i < count; ) {
         int consumed =  setvlen(count - i);
-	printf("allocated vector length: %d\n");
+	      //printf("allocated vector length: %d\n", consumed);
         asm volatile ("vmca va0, %0"
                     :
                     : "r" (&src[i]));    

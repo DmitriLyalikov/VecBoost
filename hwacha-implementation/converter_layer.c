@@ -81,7 +81,7 @@ void forward_converter_layer(int conv_type, int *in_int8, float *in_fp32, int *o
         int8_to_fp32(in_int8, temp, count);
 	// printf("exit itofp32 func\n");
         end_conv = rdcycle();
-	printf("Conversion Function cyles: %lu\n", end_conv - start_conv);
+	    printf("Conversion Function cyles: %lu\n", end_conv - start_conv);
 
         // Convert from feature depth layout to NCHW
         convert_fd_to_nchw(temp, 5, 5, 3, out_fp32);
