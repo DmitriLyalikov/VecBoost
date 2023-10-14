@@ -1,4 +1,4 @@
-# RISCV Hwacha YOLOV3 Sublayer optimization
+# VecBoost
 ## To configure
 ```
 cd firesim-nvdla/sim
